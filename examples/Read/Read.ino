@@ -2,15 +2,15 @@
 *  FRAM read examples
 *  @miniqiang
 *  2016.11.17
+*  2018.7.4 修订
 */
-
 #include <MB85RC16V.h>
-#include <Wire.h>
-MB85RC16V EEPROM;
+
+MB85RC16V EEPROM;   //将其初始化成EEPRM
 void setup() {
   // put your setup code here, to run once:
-	Write.begin();
-	EEPROM.begin(0x50);
+	
+	EEPROM.begin();   //从这里以后，完全和EEPROM代码兼容
 	Serial.begin(9600);
 }
 
