@@ -6,7 +6,7 @@ Sum : A2+A1+A0+11 bit  = 16K
 */
 /**************************************************************************/
 
-#include <MB85RC16V.h>
+#include "MB85RC16V.h"
 
 MB85RC16V::MB85RC16V(void) 
 {
@@ -38,20 +38,7 @@ void MB85RC16V::write(uint16_t framAddr, uint8_t value)
   Wire.endTransmission();
 }
 //continuous 
-void MB85RC16V::write(uint16_t framAddr,uint8_t length, uint8_t data[])
-{
-  uint16_t addr = framAddr;
-  for(int i=0;i<length;i++)
-  {
-    Wire.beginTransmission(_i2c_addr);
-    Wire.write(addr&0x7ff);
-	Wire.write(data[i]);
-	Wire.endTransmission();
-	addr+=1;
-  }
-}
-//continuous 
-void MB85RC16V::write(uint16_t framAddr,uint8_t length, char data[])
+void MB85RC16V::write(uint16_t framAddr,uint8_t length, uint8_t *data)
 {
   uint16_t addr = framAddr;
   for(int i=0;i<length;i++)
@@ -73,7 +60,7 @@ void MB85RC16V::update(uint16_t framAddr, uint8_t value)
   Wire.endTransmission();
 }
 //continuous 
-void MB85RC16V::update(uint16_t framAddr,uint8_t length, uint8_t data[])
+void MB85RC16V::update(uint16_t framAddr,uint8_t length, uint8_t *data)
 {
   uint16_t addr = framAddr;
   for(int i=0;i<length;i++)
@@ -85,19 +72,7 @@ void MB85RC16V::update(uint16_t framAddr,uint8_t length, uint8_t data[])
 	addr+=1;
   }
 }
-//continuous 
-void MB85RC16V::update(uint16_t framAddr,uint8_t length, char data[])
-{
-  uint16_t addr = framAddr;
-  for(int i=0;i<length;i++)
-  {
-    Wire.beginTransmission(_i2c_addr);
-    Wire.write(addr&0x7ff);
-	Wire.write(data[i]);
-	Wire.endTransmission();
-	addr+=1;
-  }
-}
+
 /**************************************************************************/
 /*!
     @brief  Reads an 8 bit value from the specified FRAM address
@@ -122,29 +97,16 @@ uint8_t MB85RC16V::read(uint16_t framAddr)
 	return Wire.read();
   }
 }
-//continuous 
-void MB85RC16V::read(uint16_t framAddr,uint8_t num,uint8_t data[])
+void MB85RC16V::read(uint16_t framAddr,uint8_t num,uint8_t *data)
 {
   Wire.beginTransmission(_i2c_addr);
   Wire.write(framAddr&0x7ff);
   Wire.endTransmission();
 
   Wire.requestFrom(_i2c_addr, (uint8_t)num);
-  for(int i=0;Wire.available()>0;i++)
+  for(uint8_t i=0;Wire.available()>0;i++)
   {
 	data[i]=Wire.read(); 
   }
 }
-//continuous 
-void MB85RC16V::read(uint16_t framAddr,uint8_t num,char data[])
-{
-  Wire.beginTransmission(_i2c_addr);
-  Wire.write(framAddr&0x7ff);
-  Wire.endTransmission();
 
-  Wire.requestFrom(_i2c_addr, (uint8_t)num);
-  for(int i=0;Wire.available()>0;i++)
-  {
-	data[i]=Wire.read(); 
-  }
-}
